@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import {
   Box,
   Button,
   Card,
   Container,
-  debounce,
   Divider,
   Link,
   TextField,
@@ -88,7 +87,8 @@ const Login = () => {
   const classes = useStyles();
   const [userName, setUserName] = useState("");
 
-  const handleChange = (value: string) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
     setUserName(value);
     sessionStorage.setItem("loggedinUser", value);
   };
@@ -114,7 +114,7 @@ const Login = () => {
           <TextField
             variant="outlined"
             value={userName}
-            onChange={() => debounce(handleChange, 2000)}
+            onChange={handleChange}
           />
           <Button>Continue</Button>
           <Box className={classes.disclaimer}>
