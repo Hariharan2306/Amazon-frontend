@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import {
   Autocomplete,
@@ -22,12 +23,13 @@ import debounce from "lodash/debounce";
 import get from "lodash/get";
 import amazonWhiteFont from "../Assets/amazonWhiteFont.png";
 import { menuOptions, navBarOpts } from "../Constants";
-import { getProductsNames } from "../Thunks/productsThunk";
+import { getProductsDetails, getProductsNames } from "../Thunks/productsThunk";
 import type { AppDispatch, RootState } from "../Tools/store";
 import { productsSelector } from "../Selectors/productsSelector";
 
 type HeaderAndNavBarProps = {
   fetchProductsNames: (search: string) => void;
+  fetchItemDetails: (search: string) => void;
   products: Option[];
 };
 type Option = {
@@ -121,19 +123,26 @@ const useStyles = makeStyles(() => ({
   hoverBorder: { "&:hover": { border: "1px solid white" } },
 }));
 const HeaderAndNavBar: React.FC<HeaderAndNavBarProps> = (props) => {
-  const { fetchProductsNames, products } = props;
+  const { fetchProductsNames, products, fetchItemDetails } = props;
   const classes = useStyles();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
   const debouncedSearch = useMemo(
-    () => debounce((value) => fetchProductsNames(value), 3000),
+    () => debounce((value) => fetchProductsNames(value), 2000),
     []
   );
 
   const handleSearch = (value: string) => {
     setSearch(value);
     debouncedSearch(value);
+  };
+
+  const moveToItemPage = (value: string) => {
+    setSearch(value);
+    fetchItemDetails(value);
+    // navigate("/item-details");
   };
 
   return (
@@ -166,7 +175,7 @@ const HeaderAndNavBar: React.FC<HeaderAndNavBarProps> = (props) => {
           <Autocomplete
             value={products.find(({ value }) => value === search)}
             onChange={(_event: React.SyntheticEvent, newValue: Option | null) =>
-              handleSearch(get(newValue, "value", ""))
+              moveToItemPage(get(newValue, "value", ""))
             }
             inputValue={search}
             onInputChange={(_event, newInputValue) =>
@@ -241,6 +250,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
   fetchProductsNames: (actions: string) => dispatch(getProductsNames(actions)),
+  fetchItemDetails: (actions: string) => dispatch(getProductsDetails(actions)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderAndNavBar);

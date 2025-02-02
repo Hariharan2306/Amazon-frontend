@@ -10,6 +10,7 @@ export default function app() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
+          {/* <Route path="/item-details" element={<Home />} /> */}
         </Routes>
       </Router>
     </Suspense>
