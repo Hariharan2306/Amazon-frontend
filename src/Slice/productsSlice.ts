@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+import type { Option, ProductData } from "../types/commonTypes";
 
 type Product = {
-  products: { label: string; value: string }[];
+  products: Option[];
   error: string;
-  productDetails: object[];
+  productDetail: ProductData;
 };
 const initialState: Product = {
   products: [],
-  productDetails: [],
+  productDetail: {} as ProductData,
   error: "",
 };
 
@@ -19,7 +20,7 @@ const productsSlice = createSlice({
       state.products = action.payload;
     },
     setProductsDetails: (state, action) => {
-      state.productDetails = action.payload;
+      state.productDetail = action.payload;
     },
     setError: (state, action) => {
       state.error = action.payload;

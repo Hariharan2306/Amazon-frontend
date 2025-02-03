@@ -24,18 +24,9 @@ import get from "lodash/get";
 import amazonWhiteFont from "../Assets/amazonWhiteFont.png";
 import { menuOptions, navBarOpts } from "../Constants";
 import { getProductsDetails, getProductsNames } from "../Thunks/productsThunk";
-import type { AppDispatch, RootState } from "../Tools/store";
 import { productsSelector } from "../Selectors/productsSelector";
-
-type HeaderAndNavBarProps = {
-  fetchProductsNames: (search: string) => void;
-  fetchItemDetails: (search: string) => void;
-  products: Option[];
-};
-type Option = {
-  label: string;
-  value: string;
-};
+import type { AppDispatch, RootState } from "../Tools/store";
+import type { HeaderAndNavBarProps, Option } from "../types/commonTypes";
 
 const useStyles = makeStyles(() => ({
   amazonIcon: {
@@ -130,7 +121,7 @@ const HeaderAndNavBar: React.FC<HeaderAndNavBarProps> = (props) => {
   const [search, setSearch] = useState("");
 
   const debouncedSearch = useMemo(
-    () => debounce((value) => fetchProductsNames(value), 2000),
+    () => debounce((value) => fetchProductsNames(value), 1000),
     []
   );
 
@@ -142,7 +133,7 @@ const HeaderAndNavBar: React.FC<HeaderAndNavBarProps> = (props) => {
   const moveToItemPage = (value: string) => {
     setSearch(value);
     fetchItemDetails(value);
-    // navigate("/item-details");
+    navigate("/item-details");
   };
 
   return (
