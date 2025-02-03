@@ -63,7 +63,7 @@ const useStyles = makeStyles(() => ({
   boldFont: {
     "& .MuiTypography-root": { fontSize: ".85rem !important", color: "white" },
   },
-  cart: { display: "flex" },
+  cart: { display: "flex", "& .MuiSvgIcon-root": { fill: "white" } },
   input: {
     flex: 1,
     padding: "5px 10px",
@@ -220,10 +220,13 @@ const HeaderAndNavBar: React.FC<HeaderAndNavBarProps> = (props) => {
             <Typography>& Orders</Typography>
           </Box>
         </Box>
-        <Box className={`${classes.boldFont} ${classes.cart}`}>
+        <Button
+          className={`${classes.boldFont} ${classes.cart}`}
+          onClick={() => navigate("/cart")}
+        >
           <CartIcon />
           <Typography>Cart</Typography>
-        </Box>
+        </Button>
       </Box>
       <Box className={classes.navBar}>
         {navBarOpts.map((e) => (

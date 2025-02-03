@@ -13,6 +13,10 @@ export type ItemDetailProps = {
   addToCart: (userName: string, productId: string) => void;
 };
 
+export type CartProps = {
+  fetchCartData: (userName: string) => void;
+};
+
 export type ProductData = {
   productId: number;
   productName: string;

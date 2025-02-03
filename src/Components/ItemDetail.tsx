@@ -84,8 +84,7 @@ const ItemDetail: React.FC<ItemDetailProps> = (props) => {
   };
 
   const addCart = () => {
-    const userData = sessionStorage.getItem("loggedinUser") || "{}";
-    const { loggedinUser: userName } = JSON.parse(userData);
+    const userName = sessionStorage.getItem("loggedinUser") || "";
     addToCart(userName, id);
   };
 
