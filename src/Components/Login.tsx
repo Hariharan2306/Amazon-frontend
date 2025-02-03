@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -11,6 +12,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import isEmpty from "lodash/isEmpty";
 import amazonLogo from "../Assets/amazonLogo.svg";
 
 const useStyles = makeStyles(() => ({
@@ -85,12 +87,19 @@ const useStyles = makeStyles(() => ({
 }));
 const Login = () => {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [userName, setUserName] = useState("");
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setUserName(value);
-    sessionStorage.setItem("loggedinUser", value);
+  };
+
+  const onLogin = () => {
+    if (!isEmpty(userName)) {
+      sessionStorage.setItem("loggedinUser", userName);
+      navigate("/home");
+    }
   };
 
   return (
@@ -116,7 +125,7 @@ const Login = () => {
             value={userName}
             onChange={handleChange}
           />
-          <Button>Continue</Button>
+          <Button onClick={() => onLogin()}>Continue</Button>
           <Box className={classes.disclaimer}>
             {" By continuing, you agree to Amazon's "}
             <Link href="#">

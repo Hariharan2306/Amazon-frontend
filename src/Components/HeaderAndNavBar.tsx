@@ -23,7 +23,7 @@ import debounce from "lodash/debounce";
 import get from "lodash/get";
 import amazonWhiteFont from "../Assets/amazonWhiteFont.png";
 import { menuOptions, navBarOpts } from "../Constants";
-import { getProductsDetails, getProductsNames } from "../Thunks/productsThunk";
+import { getProductsNames } from "../Thunks/productsThunk";
 import { productsSelector } from "../Selectors/productsSelector";
 import type { AppDispatch, RootState } from "../Tools/store";
 import type { HeaderAndNavBarProps, Option } from "../types/commonTypes";
@@ -114,7 +114,7 @@ const useStyles = makeStyles(() => ({
   hoverBorder: { "&:hover": { border: "1px solid white" } },
 }));
 const HeaderAndNavBar: React.FC<HeaderAndNavBarProps> = (props) => {
-  const { fetchProductsNames, products, fetchItemDetails } = props;
+  const { fetchProductsNames, products } = props;
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -132,8 +132,7 @@ const HeaderAndNavBar: React.FC<HeaderAndNavBarProps> = (props) => {
 
   const moveToItemPage = (value: string) => {
     setSearch(value);
-    fetchItemDetails(value);
-    navigate("/item-details");
+    navigate(`/item-details/${value}`);
   };
 
   return (
@@ -241,7 +240,6 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
   fetchProductsNames: (actions: string) => dispatch(getProductsNames(actions)),
-  fetchItemDetails: (actions: string) => dispatch(getProductsDetails(actions)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderAndNavBar);

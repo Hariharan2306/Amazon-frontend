@@ -1,33 +1,156 @@
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { useParams } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import HeaderAndNavBar from "./HeaderAndNavBar";
-import { Box, Divider, Typography } from "@mui/material";
-import { RootState } from "../Tools/store";
+import { Box, Button, Divider, Tab, Tabs, Typography } from "@mui/material";
+import { AppDispatch, RootState } from "../Tools/store";
 import { productDetailsSelector } from "../Selectors/productsSelector";
-import type { ItemDetailProps } from "../types/commonTypes";
 import product from "../Assets/product.png";
+import { getProductsDetails } from "../Thunks/productsThunk";
+import { tabsLabels } from "../Constants";
+import { addToCart } from "../Thunks/cartThunks";
+import type { ItemDetailProps } from "../types/commonTypes";
 
-const useStyles = makeStyles(() => ({}));
+const useStyles = makeStyles(() => ({
+  root: { margin: "0 5%" },
+  productPreview: {
+    width: "5vw",
+    height: "8vh",
+    border: "2.5px solid #007184",
+    borderRadius: "5px",
+  },
+  keepShopping: { display: "flex", marginTop: "1%" },
+  keepShoppingTypography: {
+    width: "20%",
+    marginRight: "5% !important",
+    fontSize: "1.7rem !important",
+  },
+  edit: { color: "#007184" },
+  viewed: { margin: "0 1% 1% 1%" },
+  itemDetails: {
+    margin: "2% 0",
+    "& .MuiButton-root": {
+      backgroundColor: "#ffdc14",
+      borderRadius: "25px",
+      color: "black",
+      textTransform: "capitalize",
+      margin: "4% 0",
+      padding: "2% 25%",
+    },
+  },
+  prevViewedText: { fontWeight: "bold !important" },
+  content: { display: "flex", margin: "1% 0 2% 0" },
+  contentImg: { marginRight: "2%" },
+  productImg: { width: "17vw" },
+  stars: { color: "#575959 !important" },
+  discountsBox: { display: "flex", gap: "7px", alignItems: "center" },
+  deliveryDate: { margin: "5px" },
+  discount: { fontSize: "2rem !important", color: "#cd1a39" },
+  cost: { fontSize: "2rem !important" },
+  tabs: {
+    "& .MuiTab-root.Mui-selected": { color: "#007184" },
+    "& .MuiTab-root": {
+      fontWeight: "bold !important",
+      textTransform: "capitalize !important",
+      color: "black",
+    },
+    "& .MuiTabs-indicator": { backgroundColor: "#007184", height: "4px" },
+  },
+}));
 const ItemDetail: React.FC<ItemDetailProps> = (props) => {
-  const { productDetails } = props;
-  const { category } = productDetails;
+  const { productDetails, fetchItemDetails, addToCart } = props;
+  const {
+    category,
+    productDescription,
+    ratings,
+    reviewsCount,
+    discount,
+    costPrice,
+    sellingPrice,
+  } = productDetails;
   const classes = useStyles();
+  const { id = "" } = useParams();
+  const [tabValue, setTabValue] = useState(0);
+
+  useEffect(() => {
+    fetchItemDetails(id);
+  }, [id]);
+
+  const generateStars = (rating: number) => {
+    const fullStars = "⭐".repeat(Math.floor(rating));
+    const halfStar = rating % 1 !== 0 ? "☆" : "";
+    return `${fullStars}${halfStar}`;
+  };
+
+  const addCart = () => {
+    const userData = sessionStorage.getItem("loggedinUser") || "{}";
+    const { loggedinUser: userName } = JSON.parse(userData);
+    addToCart(userName, id);
+  };
+
   return (
     <>
       <HeaderAndNavBar />
-      <Box>
-        <Box>
-          <Typography>Keep shopping for{category}</Typography>
-          <Typography variant="subtitle1">Edit</Typography>
-          <Box>
-            <img src={product} alt="product" />
+      <Box className={classes.root}>
+        <Box className={classes.keepShopping}>
+          <Typography className={classes.keepShoppingTypography}>
+            Keep shopping for <b>{category}</b>
+          </Typography>
+          <Typography className={classes.edit} variant="subtitle1">
+            Edit
+          </Typography>
+          <Box className={classes.viewed}>
+            <img
+              className={classes.productPreview}
+              src={product}
+              alt="product"
+            />
             <Typography>1 Viewed</Typography>
           </Box>
         </Box>
+
         <Divider variant="middle" />
-        <Box></Box>
-        <Box></Box>
-        <Box></Box>
+
+        <Box className={classes.content}>
+          <Box className={classes.contentImg}>
+            <Typography className={classes.prevViewedText}>
+              Previously viewed
+            </Typography>
+            <img className={classes.productImg} src={product} alt="product" />
+          </Box>
+          <Box className={classes.itemDetails}>
+            <Typography>{productDescription}</Typography>
+            <Box className={classes.stars}>
+              {generateStars(ratings)} {reviewsCount}
+            </Box>
+            <Typography className={classes.stars}>
+              10K+ bought in past month
+            </Typography>
+            <Box className={classes.discountsBox}>
+              <Typography className={classes.discount}>-{discount}%</Typography>
+              <Typography className={classes.cost}>{sellingPrice}</Typography>
+              <Box>{costPrice}</Box>
+            </Box>
+            <p className={classes.deliveryDate}>
+              Get it by <b>Tomorrow, February 4</b>
+            </p>
+            <Typography>FREE Delivery by Amazon</Typography>
+            <Button onClick={addCart}>Add to Cart</Button>
+          </Box>
+        </Box>
+
+        <Divider />
+        <Tabs
+          className={classes.tabs}
+          value={tabValue}
+          onChange={(_e, value) => setTabValue(value)}
+        >
+          {tabsLabels.map((label, index) => (
+            <Tab key={index} label={label} />
+          ))}
+        </Tabs>
+        <Divider />
       </Box>
     </>
   );
@@ -35,4 +158,10 @@ const ItemDetail: React.FC<ItemDetailProps> = (props) => {
 const mapStateToProps = (state: RootState) => ({
   productDetails: productDetailsSelector(state),
 });
-export default connect(mapStateToProps, null)(ItemDetail);
+
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
+  fetchItemDetails: (actions: string) => dispatch(getProductsDetails(actions)),
+  addToCart: (userName: string, id: string) =>
+    dispatch(addToCart(userName, id)),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(ItemDetail);

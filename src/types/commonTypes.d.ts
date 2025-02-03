@@ -1,6 +1,5 @@
 export type HeaderAndNavBarProps = {
   fetchProductsNames: (search: string) => void;
-  fetchItemDetails: (search: string) => void;
   products: Option[];
 };
 export type Option = {
@@ -10,6 +9,8 @@ export type Option = {
 
 export type ItemDetailProps = {
   productDetails: ProductData;
+  fetchItemDetails: (search: string) => void;
+  addToCart: (userName: string, productId: string) => void;
 };
 
 export type ProductData = {

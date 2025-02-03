@@ -11,7 +11,8 @@ export default function app() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/item-details" element={<ItemDetail />} />
+          <Route path="/item-details/:id" element={<ItemDetail />} />
+          <Route path="/cart" element={<ItemDetail />} />
         </Routes>
       </Router>
     </Suspense>

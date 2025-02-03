@@ -25,3 +25,12 @@ export const navBarOpts = [
   "Home Improvement",
   "Today's deals",
 ];
+
+export const tabsLabels = [
+  "For you",
+  "Bestsellers",
+  "Deals",
+  "New Releases",
+  "Most Gifted",
+  "Bought together",
+];
