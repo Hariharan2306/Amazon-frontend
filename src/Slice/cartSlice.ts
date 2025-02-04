@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+import type { CartDetails } from "../types/commonTypes";
 
-const initialState = { error: "", success: "", cartData: {} };
+const initialState = { error: "", success: "", cartData: [] as CartDetails[] };
 
 const cartSlice = createSlice({
   name: "cart",

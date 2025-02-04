@@ -34,3 +34,10 @@ export const tabsLabels = [
   "Most Gifted",
   "Bought together",
 ];
+
+export const actionIcons = [
+  "Delete",
+  "Save for later",
+  "See more like this",
+  "Share",
+];

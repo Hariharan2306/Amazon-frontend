@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
@@ -58,7 +58,7 @@ const useStyles = makeStyles(() => ({
     "& .MuiTabs-indicator": { backgroundColor: "#007184", height: "4px" },
   },
 }));
-const ItemDetail: React.FC<ItemDetailProps> = (props) => {
+const ItemDetail: FC<ItemDetailProps> = (props) => {
   const { productDetails, fetchItemDetails, addToCart } = props;
   const {
     category,
